@@ -38,6 +38,7 @@ dependencies:
   fluttertoast:
   get_storage:
   intl:
+  salomon_bottom_bar:
 
 dev_dependencies:
   flutter_test:
