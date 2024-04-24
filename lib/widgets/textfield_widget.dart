@@ -37,10 +37,10 @@ class TextFieldWidget extends StatefulWidget {
       this.height = 50,
       this.maxLine = 1,
       this.hintColor = Colors.white,
-      this.borderColor = const Color(0xff1A1851),
+      this.borderColor = const Color(0xffFFC961),
       this.showEye = false,
       this.color = Colors.white,
-      this.radius = 5,
+      this.radius = 100,
       this.textCapitalization = TextCapitalization.sentences,
       this.inputType = TextInputType.text,
       this.validator,
@@ -64,10 +64,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             children: [
               TextSpan(
                 text: widget.label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontFamily: 'Bold',
-                  color: primary,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
