@@ -1,3 +1,4 @@
+import 'package:atieed/screens/tabs/courses_tab.dart';
 import 'package:atieed/screens/tabs/home_tab.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List tabs = [
     const HomeTab(),
-    const SizedBox(),
+    const CourseTab(),
     const SizedBox(),
     const SizedBox(),
   ];
