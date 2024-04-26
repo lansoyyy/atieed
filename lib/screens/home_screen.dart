@@ -1,4 +1,5 @@
 import 'package:atieed/screens/tabs/attendance_tab.dart';
+import 'package:atieed/screens/tabs/chat_tabs/general_tab.dart';
 import 'package:atieed/screens/tabs/courses_tab.dart';
 import 'package:atieed/screens/tabs/home_tab.dart';
 import 'package:atieed/utlis/colors.dart';
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const HomeTab(),
     const CourseTab(),
     const AttendanceTab(),
-    const SizedBox(),
+    const GeneralTab(),
   ];
   @override
   Widget build(BuildContext context) {
