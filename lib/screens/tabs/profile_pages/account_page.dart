@@ -1,16 +1,26 @@
-import 'package:atieed/screens/tabs/profile_pages/account_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/settings_page.dart';
 import 'package:atieed/utlis/colors.dart';
+import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
+import 'package:atieed/widgets/textfield_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class AccountPage extends StatefulWidget {
+  const AccountPage({super.key});
 
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  final bdate = TextEditingController();
+  final gradelevel = TextEditingController();
+  final studentnumber = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,70 +105,51 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                tile(
-                  Icons.settings,
-                  'Settings',
-                  () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SettingsPage()));
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: 175,
+                      child: TextFieldWidget(
+                        controller: bdate,
+                        label: 'Birthdate',
+                      ),
+                    ),
+                    SizedBox(
+                      width: 175,
+                      child: TextFieldWidget(
+                        controller: gradelevel,
+                        label: 'Grade Level',
+                      ),
+                    ),
+                  ],
                 ),
-                tile(
-                  Icons.person,
-                  'Account',
-                  () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const AccountPage()));
-                  },
+                TextFieldWidget(
+                  width: 350,
+                  controller: studentnumber,
+                  label: 'Student Number',
                 ),
-                tile(
-                  Icons.help,
-                  'Help',
-                  () {},
+                TextFieldWidget(
+                  width: 350,
+                  controller: email,
+                  label: 'Email',
                 ),
-                tile(
-                  Icons.warning,
-                  'Report an Issue',
-                  () {},
+                TextFieldWidget(
+                  width: 350,
+                  controller: password,
+                  label: 'Password',
                 ),
-                tile(
-                  Icons.logout,
-                  'Logout',
-                  () {},
+                const SizedBox(
+                  height: 20,
+                ),
+                ButtonWidget(
+                  label: 'Save',
+                  onPressed: () {},
                 ),
                 const SizedBox(
                   height: 50,
                 ),
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget tile(IconData icon, String label, VoidCallback onTap) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(
-              15,
-            ),
-          ),
-          child: ListTile(
-            leading: TextWidget(
-              text: label,
-              fontSize: 18,
-              fontFamily: 'Bold',
-            ),
-            trailing: Icon(
-              icon,
             ),
           ),
         ),
