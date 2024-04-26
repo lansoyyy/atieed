@@ -1,8 +1,10 @@
 import 'package:atieed/screens/tabs/chat_tabs/chat_page.dart';
+import 'package:atieed/screens/tabs/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/text_widget.dart';
+import 'package:flutter/widgets.dart';
 
 class GeneralTab extends StatelessWidget {
   const GeneralTab({super.key});
@@ -35,10 +37,16 @@ class GeneralTab extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                const CircleAvatar(
-                  minRadius: 15,
-                  maxRadius: 15,
-                  backgroundColor: Colors.grey,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ProfileScreen()));
+                  },
+                  child: const CircleAvatar(
+                    minRadius: 15,
+                    maxRadius: 15,
+                    backgroundColor: Colors.grey,
+                  ),
                 ),
                 const SizedBox(
                   width: 20,
