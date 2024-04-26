@@ -31,7 +31,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     TextWidget(
-                      text: 'Settings',
+                      text: 'Help',
                       fontSize: 32,
                       fontFamily: 'Bold',
                     ),
@@ -55,16 +55,6 @@ class SettingsPage extends StatelessWidget {
                       ),
                       const SizedBox(
                         height: 20,
-                      ),
-                      ListTile(
-                        leading: TextWidget(
-                          text: 'GPS',
-                          fontSize: 18,
-                          fontFamily: 'Bold',
-                        ),
-                        trailing: const Icon(
-                          Icons.check_box_outline_blank_outlined,
-                        ),
                       ),
                       const SizedBox(
                         height: 10,

@@ -1,4 +1,5 @@
 import 'package:atieed/screens/tabs/profile_pages/account_page.dart';
+import 'package:atieed/screens/tabs/profile_pages/help_page.dart';
 import 'package:atieed/screens/tabs/profile_pages/settings_page.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/text_widget.dart';
@@ -114,7 +115,10 @@ class ProfileScreen extends StatelessWidget {
                 tile(
                   Icons.help,
                   'Help',
-                  () {},
+                  () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const HelpPage()));
+                  },
                 ),
                 tile(
                   Icons.warning,
