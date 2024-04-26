@@ -1,3 +1,4 @@
+import 'package:atieed/screens/home_screen.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:atieed/widgets/textfield_widget.dart';
@@ -55,7 +56,10 @@ class _LoginTabState extends State<LoginTab> {
                 fontSize: 14,
                 width: 150,
                 label: 'Login',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HomeScreen()));
+                },
               ),
             ),
             const SizedBox(
