@@ -1,6 +1,6 @@
 import 'package:atieed/screens/tabs/attendance_pages/gps_page.dart';
 import 'package:atieed/screens/tabs/attendance_pages/qr_page.dart';
-import 'package:atieed/screens/tabs/profile_screen.dart';
+import 'package:atieed/screens/profile_screen.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';

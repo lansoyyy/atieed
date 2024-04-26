@@ -1,5 +1,5 @@
 import 'package:atieed/screens/tabs/chat_tabs/chat_page.dart';
-import 'package:atieed/screens/tabs/profile_screen.dart';
+import 'package:atieed/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:atieed/utlis/colors.dart';

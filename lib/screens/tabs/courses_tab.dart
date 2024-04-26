@@ -1,4 +1,4 @@
-import 'package:atieed/screens/tabs/profile_screen.dart';
+import 'package:atieed/screens/profile_screen.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';

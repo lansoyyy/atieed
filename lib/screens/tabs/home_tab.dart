@@ -1,4 +1,5 @@
-import 'package:atieed/screens/tabs/profile_screen.dart';
+import 'package:atieed/screens/notif_screen.dart';
+import 'package:atieed/screens/profile_screen.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
@@ -29,7 +30,10 @@ class HomeTab extends StatelessWidget {
                     child: SizedBox(),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const NotifScreen()));
+                    },
                     icon: const Icon(
                       Icons.notifications_none_rounded,
                     ),

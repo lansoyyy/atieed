@@ -1,8 +1,8 @@
 import 'package:atieed/screens/auth/auth_screen.dart';
-import 'package:atieed/screens/tabs/profile_pages/account_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/help_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/report_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/settings_page.dart';
+import 'package:atieed/screens/profile_pages/account_page.dart';
+import 'package:atieed/screens/profile_pages/help_page.dart';
+import 'package:atieed/screens/profile_pages/report_page.dart';
+import 'package:atieed/screens/profile_pages/settings_page.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
