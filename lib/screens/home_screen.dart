@@ -1,3 +1,4 @@
+import 'package:atieed/screens/tabs/attendance_tab.dart';
 import 'package:atieed/screens/tabs/courses_tab.dart';
 import 'package:atieed/screens/tabs/home_tab.dart';
 import 'package:atieed/utlis/colors.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List tabs = [
     const HomeTab(),
     const CourseTab(),
-    const SizedBox(),
+    const AttendanceTab(),
     const SizedBox(),
   ];
   @override

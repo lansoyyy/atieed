@@ -39,6 +39,10 @@ dependencies:
   get_storage:
   intl:
   salomon_bottom_bar:
+  flutter_map:
+  qr_code_scanner: ^1.0.0
+  flutter_barcode_scanner:
+  qr_flutter:
 
 dev_dependencies:
   flutter_test:
