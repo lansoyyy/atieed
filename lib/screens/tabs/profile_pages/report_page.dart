@@ -1,19 +1,23 @@
-import 'package:atieed/screens/auth/auth_screen.dart';
-import 'package:atieed/screens/tabs/profile_pages/account_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/help_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/report_page.dart';
-import 'package:atieed/screens/tabs/profile_pages/settings_page.dart';
 import 'package:atieed/utlis/colors.dart';
+import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
+import 'package:atieed/widgets/textfield_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ReportPage extends StatefulWidget {
+  const ReportPage({super.key});
 
+  @override
+  State<ReportPage> createState() => _ReportPageState();
+}
+
+class _ReportPageState extends State<ReportPage> {
+  final subject = TextEditingController();
+  final issue = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     TextWidget(
-                      text: 'Account',
+                      text: 'Report an Issue',
                       fontSize: 32,
                       fontFamily: 'Bold',
                     ),
@@ -46,36 +50,15 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                  ),
-                  child: const CircleAvatar(
-                    minRadius: 50,
-                    maxRadius: 50,
-                    backgroundColor: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
+                  height: 50,
                 ),
                 TextWidget(
                   text: 'John Doe',
-                  fontSize: 22,
+                  fontSize: 28,
                   fontFamily: 'Bold',
                 ),
-                TextWidget(
-                  text: '12STEMA2',
-                  fontSize: 11,
-                  fontFamily: 'Regular',
-                ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Container(
                   width: 100,
@@ -98,45 +81,25 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                tile(
-                  Icons.settings,
-                  'Settings',
-                  () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SettingsPage()));
-                  },
+                TextFieldWidget(
+                  width: 350,
+                  controller: subject,
+                  label: 'Subject',
                 ),
-                tile(
-                  Icons.person,
-                  'Account',
-                  () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const AccountPage()));
-                  },
+                TextFieldWidget(
+                  radius: 15,
+                  width: 350,
+                  height: 200,
+                  maxLine: 8,
+                  controller: subject,
+                  label: 'Report an Issue',
                 ),
-                tile(
-                  Icons.help,
-                  'Help',
-                  () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const HelpPage()));
-                  },
+                const SizedBox(
+                  height: 20,
                 ),
-                tile(
-                  Icons.warning,
-                  'Report an Issue',
-                  () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ReportPage()));
-                  },
-                ),
-                tile(
-                  Icons.logout,
-                  'Logout',
-                  () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const AuthScreen()));
-                  },
+                ButtonWidget(
+                  label: 'Send',
+                  onPressed: () {},
                 ),
                 const SizedBox(
                   height: 50,
