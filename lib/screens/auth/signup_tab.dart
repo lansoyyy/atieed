@@ -1,3 +1,4 @@
+import 'package:atieed/screens/auth/registration_pages/first_page.dart';
 import 'package:atieed/screens/home_screen.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
@@ -65,8 +66,8 @@ class _SignupTabState extends State<SignupTab> {
                 width: 150,
                 label: 'Create account',
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const HomeScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const FirstPage()));
                 },
               ),
             ),
