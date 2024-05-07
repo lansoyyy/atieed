@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "491336751557",
+    "project_id": "atieed",
+    "storage_bucket": "atieed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491336751557:android:ccd94a926dd2d922b6d3ac",
+        "android_client_info": {
+          "package_name": "com.example.atieed"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1QcKOWwJ2Z3W4t9xxlkPB3AzeTZYIDJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
