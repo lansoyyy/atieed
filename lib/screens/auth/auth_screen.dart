@@ -13,56 +13,58 @@ class AuthScreen extends StatelessWidget {
       child: Scaffold(
         body: SafeArea(
           child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 250,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                  child: Container(
-                    width: double.infinity,
-                    height: 450,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: grey, width: 3),
-                    ),
-                    child: Column(
-                      children: [
-                        TabBar(
-                            indicatorColor: primary,
-                            labelColor: primary,
-                            tabs: const [
-                              Tab(
-                                text: 'Create an account',
-                              ),
-                              Tab(
-                                text: 'Login',
-                              ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 250,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                    child: Container(
+                      width: double.infinity,
+                      height: 450,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: grey, width: 3),
+                      ),
+                      child: Column(
+                        children: [
+                          TabBar(
+                              indicatorColor: primary,
+                              labelColor: primary,
+                              tabs: const [
+                                Tab(
+                                  text: 'Create an account',
+                                ),
+                                Tab(
+                                  text: 'Login',
+                                ),
+                              ]),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Expanded(
+                            child: TabBarView(children: [
+                              SignupTab(),
+                              LoginTab(),
                             ]),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Expanded(
-                          child: TabBarView(children: [
-                            SignupTab(),
-                            LoginTab(),
-                          ]),
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

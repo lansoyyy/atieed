@@ -1,12 +1,18 @@
 import 'package:atieed/screens/auth/registration_pages/third_page.dart';
+import 'package:atieed/services/add_user.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:atieed/widgets/textfield_widget.dart';
+import 'package:atieed/widgets/toast_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SecondPage extends StatefulWidget {
-  const SecondPage({super.key});
+  Map auth;
+  String inst;
+
+  SecondPage({super.key, required this.auth, required this.inst});
 
   @override
   State<SecondPage> createState() => _SecondPageState();
@@ -162,8 +168,7 @@ class _SecondPageState extends State<SecondPage> {
                   width: 150,
                   label: 'Next',
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ThirdPage()));
+                    register(context);
                   },
                 ),
               ),
@@ -175,5 +180,39 @@ class _SecondPageState extends State<SecondPage> {
         ),
       ),
     );
+  }
+
+  register(context) async {
+    try {
+      final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.text, password: password.text);
+
+      // signup(nameController.text, numberController.text, addressController.text,
+      //     emailController.text);
+      addUser(email.text, widget.inst, name.text, bdate.text, gradelevel.text,
+          studentnumber.text, user.user!.uid);
+
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email.text, password: password.text);
+
+      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+
+      showToast("Registered Successfully! Verification was sent to your email");
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const ThirdPage()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showToast('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        showToast('The account already exists for that email.');
+      } else if (e.code == 'invalid-email') {
+        showToast('The email address is not valid.');
+      } else {
+        showToast(e.toString());
+      }
+    } on Exception catch (e) {
+      showToast("An error occurred: $e");
+    }
   }
 }
