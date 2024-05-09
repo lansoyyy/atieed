@@ -92,11 +92,15 @@ class HelpPage extends StatelessWidget {
               100,
             ),
           ),
-          child: ListTile(
-            leading: TextWidget(
-              text: label,
-              fontSize: 16,
-              fontFamily: 'Bold',
+          child: SizedBox(
+            height: 50,
+            width: 500,
+            child: ListTile(
+              leading: TextWidget(
+                text: label,
+                fontSize: 16,
+                fontFamily: 'Bold',
+              ),
             ),
           ),
         ),

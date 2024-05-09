@@ -6,7 +6,14 @@ import 'package:atieed/widgets/text_widget.dart';
 import 'package:atieed/widgets/textfield_widget.dart';
 import 'package:atieed/widgets/toast_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart' as path;
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:io';
 
 class SecondPage extends StatefulWidget {
   Map auth;
@@ -19,12 +26,82 @@ class SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<SecondPage> {
+  late String fileName = '';
+
+  late File imageFile;
+
+  late String imageURL = '';
+
+  Future<void> uploadPicture(String inputSource) async {
+    final picker = ImagePicker();
+    XFile pickedImage;
+    try {
+      pickedImage = (await picker.pickImage(
+          source: inputSource == 'camera'
+              ? ImageSource.camera
+              : ImageSource.gallery,
+          maxWidth: 1920))!;
+
+      fileName = path.basename(pickedImage.path);
+      imageFile = File(pickedImage.path);
+
+      try {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => const Padding(
+            padding: EdgeInsets.only(left: 30, right: 30),
+            child: AlertDialog(
+                title: Row(
+              children: [
+                CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  'Loading . . .',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'QRegular'),
+                ),
+              ],
+            )),
+          ),
+        );
+
+        await firebase_storage.FirebaseStorage.instance
+            .ref('Profiles/$fileName')
+            .putFile(imageFile);
+        imageURL = await firebase_storage.FirebaseStorage.instance
+            .ref('Profiles/$fileName')
+            .getDownloadURL();
+
+        setState(() {});
+
+        Navigator.of(context).pop();
+        showToast('Image uploaded!');
+      } on firebase_storage.FirebaseException catch (error) {
+        if (kDebugMode) {
+          print(error);
+        }
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print(err);
+      }
+    }
+  }
+
   final bdate = TextEditingController();
   final gradelevel = TextEditingController();
   final studentnumber = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
+  final section = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,17 +156,23 @@ class _SecondPageState extends State<SecondPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.black,
+                      GestureDetector(
+                        onTap: () {
+                          uploadPicture('gallery');
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                        child: const CircleAvatar(
-                          minRadius: 50,
-                          maxRadius: 50,
-                          backgroundColor: Colors.grey,
+                          child: CircleAvatar(
+                            minRadius: 50,
+                            maxRadius: 50,
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(imageURL),
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -147,6 +230,11 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       TextFieldWidget(
                         width: 350,
+                        controller: section,
+                        label: 'Section',
+                      ),
+                      TextFieldWidget(
+                        width: 350,
                         controller: email,
                         label: 'Email',
                       ),
@@ -190,7 +278,7 @@ class _SecondPageState extends State<SecondPage> {
       // signup(nameController.text, numberController.text, addressController.text,
       //     emailController.text);
       addUser(email.text, widget.inst, name.text, bdate.text, gradelevel.text,
-          studentnumber.text, user.user!.uid);
+          studentnumber.text, user.user!.uid, imageURL, section.text);
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email.text, password: password.text);

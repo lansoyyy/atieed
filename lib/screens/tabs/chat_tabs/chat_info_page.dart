@@ -28,6 +28,7 @@ class ChatInfoPage extends StatelessWidget {
                 minRadius: 50,
                 maxRadius: 50,
                 backgroundColor: grey,
+                child: const Icon(Icons.person),
               ),
             ),
             const SizedBox(

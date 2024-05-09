@@ -58,6 +58,7 @@ class _CourseTabState extends State<CourseTab> {
                   minRadius: 15,
                   maxRadius: 15,
                   backgroundColor: Colors.grey,
+                  child: Icon(Icons.person),
                 ),
               ),
               const SizedBox(
@@ -288,6 +289,7 @@ class _CourseTabState extends State<CourseTab> {
                 minRadius: 15,
                 maxRadius: 15,
                 backgroundColor: Colors.grey,
+                child: Icon(Icons.person),
               ),
             ],
           ),
@@ -303,6 +305,7 @@ class _CourseTabState extends State<CourseTab> {
                   minRadius: 35,
                   maxRadius: 35,
                   backgroundColor: Colors.grey,
+                  child: Icon(Icons.person),
                 ),
                 TextWidget(
                   text: 'Zackary Welch',

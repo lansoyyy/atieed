@@ -88,6 +88,7 @@ class _ChatPageState extends State<ChatPage> {
                       minRadius: 27,
                       maxRadius: 27,
                       backgroundColor: grey,
+                      child: const Icon(Icons.person),
                     ),
                     const SizedBox(
                       width: 10,
