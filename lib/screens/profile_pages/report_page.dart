@@ -2,6 +2,7 @@ import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:atieed/widgets/textfield_widget.dart';
+import 'package:atieed/widgets/toast_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +10,12 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+  dynamic data;
+
+  ReportPage({
+    super.key,
+    required this.data,
+  });
 
   @override
   State<ReportPage> createState() => _ReportPageState();
@@ -53,7 +59,7 @@ class _ReportPageState extends State<ReportPage> {
                   height: 50,
                 ),
                 TextWidget(
-                  text: 'John Doe',
+                  text: widget.data['name'],
                   fontSize: 28,
                   fontFamily: 'Bold',
                 ),
@@ -99,7 +105,10 @@ class _ReportPageState extends State<ReportPage> {
                 ),
                 ButtonWidget(
                   label: 'Send',
-                  onPressed: () {},
+                  onPressed: () {
+                    showToast('Report submitted!');
+                    Navigator.pop(context);
+                  },
                 ),
                 const SizedBox(
                   height: 50,

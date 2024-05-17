@@ -1,12 +1,14 @@
 import 'package:atieed/screens/tabs/attendance_pages/checked_page.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/text_widget.dart';
+import 'package:atieed/widgets/toast_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 class QRPage extends StatefulWidget {
@@ -89,7 +91,9 @@ class _QRPageState extends State<QRPage> {
                       child: SizedBox(),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        showToast('Refreshed');
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                             color: primary,
@@ -127,7 +131,7 @@ class _QRPageState extends State<QRPage> {
                       ),
                       child: Center(
                         child: TextWidget(
-                          text: 'November 26, 2030',
+                          text: DateFormat.yMMMd().format(DateTime.now()),
                           fontSize: 16,
                           color: Colors.black,
                           fontFamily: 'Medium',
@@ -150,7 +154,7 @@ class _QRPageState extends State<QRPage> {
                       ),
                       child: Center(
                         child: TextWidget(
-                          text: '10:55 am',
+                          text: DateFormat('hh:mm a').format(DateTime.now()),
                           fontSize: 16,
                           color: Colors.black,
                           fontFamily: 'Medium',
@@ -202,294 +206,6 @@ class _QRPageState extends State<QRPage> {
                 ),
                 const SizedBox(
                   height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextWidget(
-                        text: 'Results',
-                        fontSize: 22,
-                        fontFamily: 'Bold',
-                      ),
-                      Container(
-                        width: 115,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            5,
-                          ),
-                        ),
-                        child: Center(
-                          child: TextWidget(
-                            text: '6:00 - 7:00',
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontFamily: 'Medium',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: Container(
-                    width: double.infinity,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 115,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: green,
-                                  borderRadius: BorderRadius.circular(
-                                    20,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: 'Active',
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontFamily: 'Medium',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                width: 150,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    20,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: 'November 26, 2030',
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontFamily: 'Medium',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                width: 75,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    20,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: 'Thu',
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontFamily: 'Medium',
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: SizedBox(
-                                  width: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          TextWidget(
-                            text: '1st Semester',
-                            fontSize: 12,
-                          ),
-                          TextWidget(
-                            align: TextAlign.start,
-                            maxLines: 2,
-                            text:
-                                'Contemporary Philippine Arts from the Regions',
-                            fontSize: 18,
-                            fontFamily: 'Bold',
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: 115,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    20,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: 'November',
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontFamily: 'Medium',
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 115,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    5,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: '6:00 - 7:00',
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontFamily: 'Medium',
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 115,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    5,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: '12STEMA2',
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontFamily: 'Medium',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    color: green,
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(
-                                      20,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: TextWidget(
-                                      text: 'Tue',
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontFamily: 'Medium',
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  width: 100,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    color: green,
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(
-                                      20,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: TextWidget(
-                                      text: 'Wed',
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontFamily: 'Medium',
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  width: 100,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    color: green,
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(
-                                      20,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: TextWidget(
-                                      text: 'Thu',
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontFamily: 'Medium',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

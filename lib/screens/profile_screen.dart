@@ -145,7 +145,9 @@ class ProfileScreen extends StatelessWidget {
                         'Report an Issue',
                         () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ReportPage()));
+                              builder: (context) => ReportPage(
+                                    data: data,
+                                  )));
                         },
                       ),
                       tile(
