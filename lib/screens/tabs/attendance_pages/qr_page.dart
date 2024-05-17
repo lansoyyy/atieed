@@ -1,7 +1,9 @@
 import 'package:atieed/screens/tabs/attendance_pages/checked_page.dart';
+import 'package:atieed/utlis/app_constants.dart';
 import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:atieed/widgets/toast_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,9 +22,6 @@ class QRPage extends StatefulWidget {
 
 class _QRPageState extends State<QRPage> {
   String qrCode = 'Unknown';
-  String name = '';
-  int persons = 0;
-  String ride = '';
 
   Future<void> scanQRCode() async {
     String status = '';
@@ -48,13 +47,34 @@ class _QRPageState extends State<QRPage> {
           );
         },
       );
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const CheckedPage()));
+
+      Navigator.pop(context);
 
       if (!mounted) return;
 
       setState(() {
         this.qrCode = qrCode;
+      });
+      await FirebaseFirestore.instance
+          .collection('Courses')
+          .doc(qrCode)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot['students'].contains(userId)) {
+          await FirebaseFirestore.instance
+              .collection('Courses')
+              .doc(documentSnapshot.id)
+              .update({
+            'presents': FieldValue.arrayUnion([userId]),
+          });
+
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => CheckedPage(
+                    data: documentSnapshot,
+                  )));
+        } else {
+          showToast('You are not enrolled to this course!');
+        }
       });
     } on PlatformException {
       qrCode = 'Failed to get platform version.';

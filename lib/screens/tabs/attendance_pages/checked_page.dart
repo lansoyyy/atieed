@@ -3,9 +3,12 @@ import 'package:atieed/utlis/colors.dart';
 import 'package:atieed/widgets/button_widget.dart';
 import 'package:atieed/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CheckedPage extends StatelessWidget {
-  const CheckedPage({super.key});
+  dynamic data;
+
+  CheckedPage({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,7 @@ class CheckedPage extends StatelessWidget {
             ),
             Container(
               height: 75,
-              width: 350,
+              width: 300,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(color: primary, width: 2),
@@ -42,7 +45,7 @@ class CheckedPage extends StatelessWidget {
               child: Center(
                 child: TextWidget(
                   maxLines: 2,
-                  text: 'Contemporary Philippine Arts from the Regions',
+                  text: data['name'],
                   fontSize: 18,
                   fontFamily: 'Bold',
                 ),
@@ -54,50 +57,31 @@ class CheckedPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 150,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      20,
-                    ),
-                  ),
-                  child: Center(
-                    child: TextWidget(
-                      text: 'November 26, 2030',
-                      fontSize: 12,
-                      color: Colors.black,
-                      fontFamily: 'Medium',
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  width: 75,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: green,
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      20,
+                for (int i = 0; i < data['days'].length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: Container(
+                      width: 80,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: green,
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          20,
+                        ),
+                      ),
+                      child: Center(
+                        child: TextWidget(
+                          text: data['days'][i],
+                          fontSize: 11,
+                          color: Colors.white,
+                          fontFamily: 'Medium',
+                        ),
+                      ),
                     ),
                   ),
-                  child: Center(
-                    child: TextWidget(
-                      text: 'Thu',
-                      fontSize: 12,
-                      color: Colors.white,
-                      fontFamily: 'Medium',
-                    ),
-                  ),
-                ),
               ],
             ),
             const SizedBox(
@@ -107,27 +91,7 @@ class CheckedPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 115,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      20,
-                    ),
-                  ),
-                  child: Center(
-                    child: TextWidget(
-                      text: 'November',
-                      fontSize: 12,
-                      color: Colors.black,
-                      fontFamily: 'Medium',
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 115,
+                  width: 125,
                   height: 30,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -139,7 +103,7 @@ class CheckedPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: TextWidget(
-                      text: '6:00 - 7:00',
+                      text: '${data['timefrom']} - ${data['timeto']}',
                       fontSize: 12,
                       color: Colors.black,
                       fontFamily: 'Medium',
@@ -147,7 +111,7 @@ class CheckedPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 115,
+                  width: 125,
                   height: 30,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -159,7 +123,7 @@ class CheckedPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: TextWidget(
-                      text: '12STEMA2',
+                      text: '${data['section']}',
                       fontSize: 12,
                       color: Colors.black,
                       fontFamily: 'Medium',
@@ -196,7 +160,7 @@ class CheckedPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: TextWidget(
-                      text: 'November 26, 2030',
+                      text: DateFormat.yMMMd().format(DateTime.now()),
                       fontSize: 12,
                       color: Colors.black,
                       fontFamily: 'Medium',
@@ -219,7 +183,7 @@ class CheckedPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: TextWidget(
-                      text: '6:00 AM',
+                      text: DateFormat('hh:mm a').format(DateTime.now()),
                       fontSize: 12,
                       color: Colors.black,
                       fontFamily: 'Medium',
