@@ -1,278 +1,413 @@
-import 'package:atieed/models/chat_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import 'package:atieed/utlis/colors.dart';
+import 'package:atieed/screens/home_screen.dart';
+import 'package:atieed/services/add_messages.dart';
 import 'package:atieed/widgets/text_widget.dart';
-import 'package:atieed/widgets/textfield_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
-  bool? ingeneral;
+  final String driverId;
+  final String driverName;
 
-  ChatPage({
+  const ChatPage({
     super.key,
-    this.ingeneral = false,
+    required this.driverId,
+    required this.driverName,
   });
-
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  List<Message> messages = [
-    Message(
-      text: 'Hello!',
-      senderName: 'John Doe',
-      time: '10:00 AM',
-      isSentByMe: false,
-    ),
-    Message(
-      text: 'Hi there!',
-      senderName: 'Jane Smith',
-      time: '10:05 AM',
-      isSentByMe: true,
-    ),
-    Message(
-      text: 'How are you?',
-      senderName: 'John Doe',
-      time: '10:10 AM',
-      isSentByMe: false,
-    ),
-    Message(
-      text: 'I\'m good, thanks!',
-      senderName: 'Jane Smith',
-      time: '10:15 AM',
-      isSentByMe: true,
-    ),
-    Message(
-      text: 'What about you?',
-      senderName: 'John Doe',
-      time: '10:20 AM',
-      isSentByMe: false,
-    ),
-    Message(
-      text: 'I\'m doing well.',
-      senderName: 'Jane Smith',
-      time: '10:25 AM',
-      isSentByMe: true,
-    ),
-  ];
-  final msg = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+    getDriverData();
+  }
+
+  final messageController = TextEditingController();
+
+  String message = '';
+
+  final ScrollController _scrollController = ScrollController();
+
+  bool executed = true;
+
+  String driverContactNumber = '';
+  String userName = '';
+  String userProfile = '';
+
+  bool hasLoaded = false;
+
+  getUserData() {
+    FirebaseFirestore.instance
+        .collection('Students')
+        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) async {
+      for (var doc in querySnapshot.docs) {
+        setState(() {
+          userName = doc['name'];
+          userProfile = doc['img'];
+        });
+      }
+    });
+  }
+
+  String driverProfile = '';
+
+  getDriverData() {
+    FirebaseFirestore.instance
+        .collection('Students')
+        .where('id', isEqualTo: widget.driverId)
+        .get()
+        .then((QuerySnapshot querySnapshot) async {
+      for (var doc in querySnapshot.docs) {
+        setState(() {
+          driverProfile = doc['img'];
+          hasLoaded = true;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 75,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+    final Stream<DocumentSnapshot> chatData = FirebaseFirestore.instance
+        .collection('Messages')
+        .doc(FirebaseAuth.instance.currentUser!.uid + widget.driverId)
+        .snapshots();
+
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back)),
+          centerTitle: true,
+          foregroundColor: Colors.grey,
+          backgroundColor: Colors.white,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                minRadius: 22,
+                maxRadius: 22,
+                backgroundImage: NetworkImage(driverProfile),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              TextWidget(
+                  text: widget.driverName, fontSize: 18, color: Colors.grey),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: hasLoaded
+            ? SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                      ),
+                    StreamBuilder<DocumentSnapshot>(
+                        stream: chatData,
+                        builder: (context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: Text('Loading'));
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Something went wrong'));
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: SizedBox(
+                                    child: CircularProgressIndicator()));
+                          }
+
+                          try {
+                            dynamic data = snapshot.data;
+                            List messages = data['messages'] ?? [];
+                            return Expanded(
+                              child: SizedBox(
+                                child: ListView.builder(
+                                    itemCount: messages.isNotEmpty
+                                        ? messages.length
+                                        : 0,
+                                    controller: _scrollController,
+                                    itemBuilder: ((context, index) {
+                                      if (executed) {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((timeStamp) {
+                                          _scrollController.animateTo(
+                                              _scrollController
+                                                  .position.maxScrollExtent,
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              curve: Curves.easeOut);
+
+                                          setState(() {
+                                            executed = false;
+                                          });
+                                        });
+                                      }
+                                      return Row(
+                                        mainAxisAlignment: messages[index]
+                                                    ['sender'] ==
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid
+                                            ? MainAxisAlignment.end
+                                            : MainAxisAlignment.start,
+                                        children: [
+                                          messages[index]['sender'] !=
+                                                  FirebaseAuth
+                                                      .instance.currentUser!.uid
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5),
+                                                  child: CircleAvatar(
+                                                    minRadius: 15,
+                                                    maxRadius: 15,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            driverProfile),
+                                                  ),
+                                                )
+                                              : const SizedBox(),
+                                          Column(
+                                            crossAxisAlignment: messages[index]
+                                                        ['sender'] ==
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid
+                                                ? CrossAxisAlignment.end
+                                                : CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10.0,
+                                                        horizontal: 10.0),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10.0,
+                                                        horizontal: 15.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        const Radius.circular(
+                                                            20.0),
+                                                    topRight:
+                                                        const Radius.circular(
+                                                            20.0),
+                                                    bottomLeft: messages[index]
+                                                                ['sender'] ==
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid
+                                                        ? const Radius.circular(
+                                                            20.0)
+                                                        : const Radius.circular(
+                                                            0.0),
+                                                    bottomRight: messages[index]
+                                                                ['sender'] ==
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid
+                                                        ? const Radius.circular(
+                                                            0.0)
+                                                        : const Radius.circular(
+                                                            20.0),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  messages[index]['message'],
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16.0,
+                                                      fontFamily: 'QRegular'),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomRight,
+                                                child: Text(
+                                                  DateFormat.jm().format(
+                                                      messages[index]
+                                                              ['dateTime']
+                                                          .toDate()),
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 11.0,
+                                                      fontFamily: 'QRegular'),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          messages[index]['sender'] ==
+                                                  FirebaseAuth
+                                                      .instance.currentUser!.uid
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 5),
+                                                  child: CircleAvatar(
+                                                    minRadius: 15,
+                                                    maxRadius: 15,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                      userProfile,
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox(),
+                                        ],
+                                      );
+                                    })),
+                              ),
+                            );
+                          } catch (e) {
+                            return const Expanded(child: SizedBox());
+                          }
+                        }),
+                    const Divider(
+                      color: Colors.grey,
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    CircleAvatar(
-                      minRadius: 27,
-                      maxRadius: 27,
-                      backgroundColor: grey,
-                      child: const Icon(Icons.person),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextWidget(
-                          text: 'John Doe',
-                          fontSize: 18,
-                          fontFamily: 'Bold',
-                          color: Colors.black,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.circle,
-                              color: Colors.green,
-                              size: 15,
+                            Container(
+                              height: 45,
+                              width: 240,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                controller: messageController,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 1, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 1, color: Colors.black),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  hintText: 'Type a message',
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: (value) {
+                                  message = value;
+                                },
+                              ),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
-                            TextWidget(
-                              text: 'Online',
-                              fontSize: 14,
-                              fontFamily: 'Regular',
-                              color: Colors.black,
+                            MaterialButton(
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100)),
+                              minWidth: 75,
+                              height: 45,
+                              color: Colors.green,
+                              onPressed: (() async {
+                                if (message != '') {
+                                  try {
+                                    await FirebaseFirestore.instance
+                                        .collection('Messages')
+                                        .doc(FirebaseAuth
+                                                .instance.currentUser!.uid +
+                                            widget.driverId)
+                                        .update({
+                                      'lastMessage': messageController.text,
+                                      'dateTime': DateTime.now(),
+                                      'seen': false,
+                                      'messages': FieldValue.arrayUnion([
+                                        {
+                                          'message': messageController.text,
+                                          'dateTime': DateTime.now(),
+                                          'sender': FirebaseAuth
+                                              .instance.currentUser!.uid
+                                        },
+                                      ]),
+                                    });
+                                  } catch (e) {
+                                    addMessage(
+                                        widget.driverId,
+                                        messageController.text,
+                                        widget.driverName,
+                                        userName,
+                                        driverProfile,
+                                        userProfile);
+                                  }
+                                  messageController.clear();
+                                  message = '';
+                                  _scrollController.animateTo(
+                                      _scrollController
+                                          .position.maxScrollExtent,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeOut);
+                                }
+                              }),
+                              child: const Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
               ),
-            ),
-            Divider(
-              color: grey,
-            ),
-            Expanded(
-                child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return MessageWidget(message: messages[index]);
-              },
-            )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 275,
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: TextFormField(
-                      style: TextStyle(
-                        fontFamily: 'Regular',
-                        fontSize: 14,
-                        color: primary,
-                      ),
-                      decoration: InputDecoration(
-                        disabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        filled: true,
-                        fillColor: grey,
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                        hintStyle: const TextStyle(
-                          fontFamily: 'Regular',
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                        hintText: 'Write something...',
-                        border: InputBorder.none,
-                      ),
-                      controller: msg,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                GestureDetector(
-                  child: const Icon(
-                    Icons.send,
-                    size: 30,
-                    color: Colors.green,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
       ),
     );
   }
-}
 
-class MessageWidget extends StatelessWidget {
-  final Message message;
-
-  const MessageWidget({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (!message.isSentByMe)
-            CircleAvatar(
-              child: Text(message.senderName[0]),
-            ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: message.isSentByMe
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message.senderName,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontFamily: 'Bold'),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: message.isSentByMe ? Colors.blue : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Text(
-                    message.text,
-                    style: TextStyle(
-                        color: message.isSentByMe ? Colors.white : Colors.black,
-                        fontFamily: 'Regular'),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  message.time,
-                  style: const TextStyle(
-                      fontSize: 12, color: Colors.grey, fontFamily: 'Regular'),
-                ),
-              ],
-            ),
+  Future<bool> onWillPop() async {
+    final shouldPop = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Do you want to exit this conversation?'),
+        actions: <Widget>[
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: TextWidget(text: 'No', fontSize: 12, color: Colors.grey),
           ),
-          const SizedBox(
-            width: 10,
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const HomeScreen())),
+            child: TextWidget(text: 'Yes', fontSize: 14, color: Colors.black),
           ),
-          if (message.isSentByMe)
-            CircleAvatar(
-              child: Text(
-                message.senderName[0],
-                style: const TextStyle(fontFamily: 'Bold'),
-              ),
-            ),
         ],
       ),
     );
+
+    return shouldPop ?? false;
   }
 }
