@@ -35,15 +35,15 @@ class HeaderWidget extends StatelessWidget {
               const Expanded(
                 child: SizedBox(),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const NotifScreen()));
-                },
-                icon: const Icon(
-                  Icons.notifications_none_rounded,
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => const NotifScreen()));
+              //   },
+              //   icon: const Icon(
+              //     Icons.notifications_none_rounded,
+              //   ),
+              // ),
               const SizedBox(
                 width: 10,
               ),
