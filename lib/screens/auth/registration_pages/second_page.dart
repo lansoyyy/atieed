@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -98,8 +99,7 @@ class _SecondPageState extends State<SecondPage> {
   final bdate = TextEditingController();
   final gradelevel = TextEditingController();
   final studentnumber = TextEditingController();
-  final email = TextEditingController();
-  final password = TextEditingController();
+
   final name = TextEditingController();
   final section = TextEditingController();
   @override
@@ -207,11 +207,17 @@ class _SecondPageState extends State<SecondPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          SizedBox(
-                            width: 175,
-                            child: TextFieldWidget(
-                              controller: bdate,
-                              label: 'Birthdate',
+                          GestureDetector(
+                            onTap: () {
+                              dateFromPicker(context);
+                            },
+                            child: SizedBox(
+                              width: 175,
+                              child: TextFieldWidget(
+                                isEnabled: false,
+                                controller: bdate,
+                                label: 'Birthdate',
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -232,16 +238,6 @@ class _SecondPageState extends State<SecondPage> {
                         width: 350,
                         controller: section,
                         label: 'Section',
-                      ),
-                      TextFieldWidget(
-                        width: 350,
-                        controller: email,
-                        label: 'Email',
-                      ),
-                      TextFieldWidget(
-                        width: 350,
-                        controller: password,
-                        label: 'Password',
                       ),
                     ],
                   ),
@@ -270,18 +266,56 @@ class _SecondPageState extends State<SecondPage> {
     );
   }
 
+  void dateFromPicker(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: primary,
+                onPrimary: Colors.white,
+                onSurface: Colors.grey,
+              ),
+            ),
+            child: child!,
+          );
+        },
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1950),
+        lastDate: DateTime(2050));
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+
+      setState(() {
+        bdate.text = formattedDate;
+      });
+    } else {
+      return null;
+    }
+  }
+
   register(context) async {
     try {
       final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email.text, password: password.text);
+          email: widget.auth['email'], password: widget.auth['password']);
 
       // signup(nameController.text, numberController.text, addressController.text,
       //     emailController.text);
-      addUser(email.text, widget.inst, name.text, bdate.text, gradelevel.text,
-          studentnumber.text, user.user!.uid, imageURL, section.text);
+      addUser(
+          widget.auth['email'],
+          widget.inst,
+          name.text,
+          bdate.text,
+          gradelevel.text,
+          studentnumber.text,
+          user.user!.uid,
+          imageURL,
+          section.text);
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.text, password: password.text);
+          email: widget.auth['email'], password: widget.auth['password']);
 
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
 

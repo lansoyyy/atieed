@@ -399,186 +399,216 @@ class HomeTab extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    for (int i = 0; i < recordsData.docs.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Container(
-                          width: double.infinity,
-                          height: 225,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.black,
+                    recordsData.docs.isEmpty
+                        ? Center(
+                            child: TextWidget(
+                              text:
+                                  'Not been added by your teacher or professor yet.',
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontFamily: 'Medium',
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 115,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: green,
-                                        borderRadius: BorderRadius.circular(
-                                          20,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: TextWidget(
-                                          text: 'Attendance',
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          fontFamily: 'Medium',
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      width: 115,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.black,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          20,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: TextWidget(
-                                          text: DateFormat.MMM()
-                                              .format(DateTime.now()),
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                          fontFamily: 'Medium',
-                                        ),
-                                      ),
-                                    ),
-                                    const Expanded(
-                                      child: SizedBox(
-                                        width: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                TextWidget(
-                                  text: recordsData.docs[i]['semester'],
-                                  fontSize: 12,
-                                ),
-                                TextWidget(
-                                  align: TextAlign.start,
-                                  maxLines: 2,
-                                  text: recordsData.docs[i]['name'],
-                                  fontSize: 18,
-                                  fontFamily: 'Bold',
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                      width: 125,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.black,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          5,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: TextWidget(
-                                          text:
-                                              '${recordsData.docs[i]['timefrom']} - ${recordsData.docs[i]['timeto']}',
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                          fontFamily: 'Medium',
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 125,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.black,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          5,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: TextWidget(
-                                          text: recordsData.docs[i]['section'],
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                          fontFamily: 'Medium',
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
+                          )
+                        : Column(
+                            children: [
+                              for (int i = 0; i < recordsData.docs.length; i++)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      for (int j = 0;
-                                          j <
-                                              recordsData
-                                                  .docs[i]['days'].length;
-                                          j++)
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 5, right: 5),
-                                          child: Container(
-                                            width: 100,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                              color: green,
-                                              border: Border.all(
-                                                  color: Colors.black),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                20,
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 225,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 115,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  color: green,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: TextWidget(
+                                                    text: 'Attendance',
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    fontFamily: 'Medium',
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            child: Center(
-                                              child: TextWidget(
-                                                text: recordsData.docs[i]
-                                                    ['days'][j],
-                                                fontSize: 12,
-                                                color: Colors.white,
-                                                fontFamily: 'Medium',
+                                              const SizedBox(
+                                                width: 20,
                                               ),
+                                              Container(
+                                                width: 115,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: TextWidget(
+                                                    text: DateFormat.MMM()
+                                                        .format(DateTime.now()),
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Medium',
+                                                  ),
+                                                ),
+                                              ),
+                                              const Expanded(
+                                                child: SizedBox(
+                                                  width: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          TextWidget(
+                                            text: recordsData.docs[i]
+                                                ['semester'],
+                                            fontSize: 12,
+                                          ),
+                                          TextWidget(
+                                            align: TextAlign.start,
+                                            maxLines: 2,
+                                            text: recordsData.docs[i]['name'],
+                                            fontSize: 18,
+                                            fontFamily: 'Bold',
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                width: 125,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    5,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: TextWidget(
+                                                    text:
+                                                        '${recordsData.docs[i]['timefrom']} - ${recordsData.docs[i]['timeto']}',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Medium',
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 125,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    5,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: TextWidget(
+                                                    text: recordsData.docs[i]
+                                                        ['section'],
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Medium',
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                for (int j = 0;
+                                                    j <
+                                                        recordsData
+                                                            .docs[i]['days']
+                                                            .length;
+                                                    j++)
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 5, right: 5),
+                                                    child: Container(
+                                                      width: 100,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: green,
+                                                        border: Border.all(
+                                                            color:
+                                                                Colors.black),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          20,
+                                                        ),
+                                                      ),
+                                                      child: Center(
+                                                        child: TextWidget(
+                                                          text: recordsData
+                                                                  .docs[i]
+                                                              ['days'][j],
+                                                          fontSize: 12,
+                                                          color: Colors.white,
+                                                          fontFamily: 'Medium',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                    ],
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
+                            ],
                           ),
-                        ),
-                      ),
                   ],
                 ),
               ),

@@ -17,9 +17,10 @@ class GeneralTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: primary,
         child: const Icon(
           Icons.add,
-          color: Colors.black,
+          color: Colors.white,
         ),
         onPressed: () {
           showModalBottomSheet(
@@ -172,163 +173,198 @@ class GeneralTab extends StatelessWidget {
                     }
 
                     final data = snapshot.requireData;
-                    return Expanded(
-                      child: SizedBox(
-                        child: ListView.builder(
-                            itemCount: data.docs.length,
-                            itemBuilder: ((context, index) {
-                              return Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: ListTile(
-                                    onTap: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('Messages')
-                                          .doc(data.docs[index].id)
-                                          .update({'seen': true});
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                              builder: (context) => ChatPage(
-                                                    driverId: data.docs[index]
-                                                        ['driverId'],
-                                                    driverName: data.docs[index]
-                                                        ['driverName'],
-                                                  )));
-                                    },
-                                    leading: CircleAvatar(
-                                      maxRadius: 25,
-                                      minRadius: 25,
-                                      backgroundImage: NetworkImage(
-                                        data.docs[index]['driverProfile'],
-                                      ),
-                                    ),
-                                    title: data.docs[index]['seen'] == true
-                                        ? TextWidget(
-                                            text: data.docs[index]
-                                                ['driverName'],
-                                            fontSize: 15,
-                                            color: Colors.black)
-                                        : TextWidget(
-                                            text: data.docs[index]
-                                                ['driverName'],
-                                            fontSize: 15,
-                                            color: Colors.black),
-                                    subtitle: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        data.docs[index]['seen'] == true
-                                            ? Text(
-                                                data.docs[index]['lastMessage']
-                                                            .toString()
-                                                            .length >
-                                                        21
-                                                    ? '${data.docs[index]['lastMessage'].toString().substring(0, 21)}...'
-                                                    : data.docs[index]
-                                                        ['lastMessage'],
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black,
-                                                    fontFamily: 'QRegular'),
-                                              )
-                                            : Text(
-                                                data.docs[index]['lastMessage']
-                                                            .toString()
-                                                            .length >
-                                                        21
-                                                    ? '${data.docs[index]['lastMessage'].toString().substring(0, 21)}...'
-                                                    : data.docs[index]
-                                                        ['lastMessage'],
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w800,
-                                                    fontSize: 12,
-                                                    color: Colors.black,
-                                                    fontFamily: 'QBold'),
-                                              ),
-                                        data.docs[index]['seen'] == true
-                                            ? TextWidget(
-                                                text: DateFormat.jm().format(
-                                                    data.docs[index]['dateTime']
-                                                        .toDate()),
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                              )
-                                            : TextWidget(
-                                                text: DateFormat.jm().format(
-                                                    data.docs[index]['dateTime']
-                                                        .toDate()),
-                                                fontSize: 12,
-                                                color: Colors.black),
-                                      ],
-                                    ),
-                                    trailing: IconButton(
-                                      onPressed: () async {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                                  title: const Text(
-                                                    'Delete Confirmation',
-                                                    style: TextStyle(
-                                                        fontFamily: 'QBold',
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  content: const Text(
-                                                    'Are you sure you want to delete this conversation?',
-                                                    style: TextStyle(
-                                                        fontFamily: 'QRegular'),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    MaterialButton(
-                                                      onPressed: () =>
-                                                          Navigator.of(context)
-                                                              .pop(true),
-                                                      child: const Text(
-                                                        'Close',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'QRegular',
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                    return data.docs.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 250),
+                            child: Center(
+                              child: TextWidget(
+                                text: 'No chats yet.',
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontFamily: 'Medium',
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: SizedBox(
+                              child: ListView.builder(
+                                  itemCount: data.docs.length,
+                                  itemBuilder: ((context, index) {
+                                    return Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: ListTile(
+                                          onTap: () async {
+                                            await FirebaseFirestore.instance
+                                                .collection('Messages')
+                                                .doc(data.docs[index].id)
+                                                .update({'seen': true});
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChatPage(
+                                                          driverId:
+                                                              data.docs[index]
+                                                                  ['driverId'],
+                                                          driverName: data
+                                                                  .docs[index]
+                                                              ['driverName'],
+                                                        )));
+                                          },
+                                          leading: CircleAvatar(
+                                            maxRadius: 25,
+                                            minRadius: 25,
+                                            backgroundImage: NetworkImage(
+                                              data.docs[index]['driverProfile'],
+                                            ),
+                                          ),
+                                          title:
+                                              data.docs[index]['seen'] == true
+                                                  ? TextWidget(
+                                                      text: data.docs[index]
+                                                          ['driverName'],
+                                                      fontSize: 15,
+                                                      color: Colors.black)
+                                                  : TextWidget(
+                                                      text: data.docs[index]
+                                                          ['driverName'],
+                                                      fontSize: 15,
+                                                      color: Colors.black),
+                                          subtitle: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              data.docs[index]['seen'] == true
+                                                  ? Text(
+                                                      data.docs[index][
+                                                                      'lastMessage']
+                                                                  .toString()
+                                                                  .length >
+                                                              21
+                                                          ? '${data.docs[index]['lastMessage'].toString().substring(0, 21)}...'
+                                                          : data.docs[index]
+                                                              ['lastMessage'],
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black,
+                                                          fontFamily:
+                                                              'QRegular'),
+                                                    )
+                                                  : Text(
+                                                      data.docs[index][
+                                                                      'lastMessage']
+                                                                  .toString()
+                                                                  .length >
+                                                              21
+                                                          ? '${data.docs[index]['lastMessage'].toString().substring(0, 21)}...'
+                                                          : data.docs[index]
+                                                              ['lastMessage'],
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 12,
+                                                          color: Colors.black,
+                                                          fontFamily: 'QBold'),
                                                     ),
-                                                    MaterialButton(
-                                                      onPressed: () async {
-                                                        Navigator.pop(context);
-                                                        await FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'Messages')
-                                                            .doc(data
-                                                                .docs[index].id)
-                                                            .delete();
-                                                      },
-                                                      child: const Text(
-                                                        'Continue',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'QRegular',
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ));
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete_outline_rounded,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ));
-                            })),
-                      ),
-                    );
+                                              data.docs[index]['seen'] == true
+                                                  ? TextWidget(
+                                                      text: DateFormat.jm()
+                                                          .format(data
+                                                              .docs[index]
+                                                                  ['dateTime']
+                                                              .toDate()),
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                    )
+                                                  : TextWidget(
+                                                      text: DateFormat.jm()
+                                                          .format(data
+                                                              .docs[index]
+                                                                  ['dateTime']
+                                                              .toDate()),
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                            ],
+                                          ),
+                                          trailing: IconButton(
+                                            onPressed: () async {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                        title: const Text(
+                                                          'Delete Confirmation',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'QBold',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        content: const Text(
+                                                          'Are you sure you want to delete this conversation?',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'QRegular'),
+                                                        ),
+                                                        actions: <Widget>[
+                                                          MaterialButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(true),
+                                                            child: const Text(
+                                                              'Close',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'QRegular',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          MaterialButton(
+                                                            onPressed:
+                                                                () async {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              await FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'Messages')
+                                                                  .doc(data
+                                                                      .docs[
+                                                                          index]
+                                                                      .id)
+                                                                  .delete();
+                                                            },
+                                                            child: const Text(
+                                                              'Continue',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'QRegular',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ));
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete_outline_rounded,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ));
+                                  })),
+                            ),
+                          );
                   }),
             ],
           ),
